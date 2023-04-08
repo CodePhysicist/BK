@@ -1,5 +1,5 @@
 <?php
-include "lib/connect_db.php";
+/*include "lib/connect_db.php";
 include "configs.php";
 
 $mac = trim($_GET["mac"]);
@@ -9,7 +9,7 @@ $result = $conn->query($sql);
 if ($result->num_rows === 1)
 {
     header("Location:$MKGateway/login");
-}
+}*/
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html lang="th">
@@ -50,7 +50,11 @@ if ($result->num_rows === 1)
 <table width="100%" cellspacing="0" cellpadding="0" border="0"  >
 <tr>
   <td  width="471" >
-    <img src="images/hilight.jpg" align="absbottom" alt="hi-speed intenet" border="0" hspace="0"  vspace="0" />
+    <!--img src="images/hilight.jpg" align="absbottom" alt="hi-speed intenet" border="0" hspace="0"  vspace="0" /-->
+    <video id="vid" style="width:100%;" controls>
+      <source src="" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
   </td>
 	<td valign="top">
 	<p><h1><b>Pro แรง!!! เน็ตคนละครึ่ง</b></h1>
@@ -134,5 +138,14 @@ if ($result->num_rows === 1)
     </div>
     </div>
 
+    <script>
+      window.onload = function() {
+          var vid = document.getElementById("vid"); 
+          var sources = vid.getElementsByTagName('source');
+          var v_index = Math.floor(Math.random() * 6) + 1;
+          sources[0].src = 'clips/clip' + v_index + '.mp4';
+          vid.load();
+      };
+    </script>
 </body>
 </html>

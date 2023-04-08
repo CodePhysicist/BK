@@ -5,7 +5,15 @@ date_default_timezone_set("Asia/Bangkok");
 include "configs.php";
 
 $username = $_GET["username"];
-$mac = $_GET["mac"];
+$mac = trim($_GET["mac"]);
+
+//Get mac from cookies
+if(isset($_COOKIE["c_mac"])) {
+    $mac = trim($_COOKIE["c_mac"]);
+}
+if($mac != "")
+    setcookie("c_mac", $mac, time() + 10 * 365 * 86400);
+
 $uptime = $_GET["uptime"];
 $time_left = $_GET["time_left"];
 $r_time = $_GET["r_time"];
@@ -49,17 +57,21 @@ if ($update_count == "")
 }
 else
 {
-    $post = [
-        'username' => $username,
-        'mac' => $mac,
-        'station_mac' => $station_mac,
-        'login_status' => '1'
-    ];
-    $ch = curl_init("$WIFI_server/set_usage_log");
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
-    $status = curl_exec($ch);
-    curl_close($ch);
+    if($update_count > 5) {
+        $update_count = 0;
+        $post = [
+            'username' => $username,
+            'mac' => $mac,
+            'station_mac' => $station_mac,
+            'login_status' => '1'
+        ];
+        $ch = curl_init("$WIFI_server/set_usage_log");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $post);
+        $status = curl_exec($ch);
+        curl_close($ch);
+    }
+    
 
     $update_count = $update_count + 1;
     $sql = "UPDATE user_mac_status SET update_time = '$dt_str', update_count = '$update_count' WHERE username = '$username' AND mac = '$mac' ";
